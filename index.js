@@ -12,10 +12,10 @@ const cookieParser = require("cookie-parser");
 dotenv.config();
 
 app.use(cors({
-  origin: 'http://localhost:3001', // replace with the origin of your frontend app
+  origin: true,
   credentials: true
 }));
-
+app.options('*', cors())
 app.get('/images', async (req, res) => {
   try {
     const image = req.query.image;
@@ -34,7 +34,7 @@ const database = (module.exports = () => {
     };
     try {
       mongoose.connect(
-        process.env.MONGO_URL,
+        "mongodb+srv://nik:jlMX5lI9oIcZk2jY@cluster0.wo3jiqh.mongodb.net/social-app?retryWrites=true&w=majority",
         connectionParams
       );
       console.log("Database connected succesfully");
