@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 exports.isAuthenticated = async (req, res, next) => {
   try {
     let token = req.body.token || req.query.token || req.headers.authorization || req.cookies.token;
-
+     console.log(token);
     if (!token) {
       return res.status(401).json({
         message: "Please login first",
