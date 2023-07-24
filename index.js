@@ -28,13 +28,6 @@ app.get('/images', async (req, res) => {
     res.status(500).send({ error: error.toString() });
   }
 });
-app.use((req, res, next) => {
-  const token = req.cookies.token;
-  if(token) {
-    res.cookie('token', token, { httpOnly: true, sameSite: 'none', secure: true });
-  }
-  next();
-});
 
 const database = (module.exports = () => {
     const connectionParams = {
