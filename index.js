@@ -18,14 +18,7 @@ app.use(cors({
 app.options('*', cors())
 const isSecure = process.env.NODE_ENV === 'production';
 
-app.use((req, res, next) => {
-    res.cookie('token', 'your-token-value', {
-        httpOnly: true,
-        sameSite: 'none',  // necessary for cross-domain cookies
-        secure: isSecure,  // only set cookies over https
-    });
-    next();
-});
+
 app.get('/images', async (req, res) => {
   try {
     const image = req.query.image;
@@ -35,7 +28,13 @@ app.get('/images', async (req, res) => {
     res.status(500).send({ error: error.toString() });
   }
 });
-
+app.use((req, res, next) => {
+  const token = req.cookies.token;
+  if(token) {
+    res.cookie('token', token, { httpOnly: true, sameSite: 'none', secure: true });
+  }
+  next();
+});
 
 const database = (module.exports = () => {
     const connectionParams = {
