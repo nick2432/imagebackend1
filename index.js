@@ -16,6 +16,16 @@ app.use(cors({
   credentials: true
 }));
 app.options('*', cors())
+const isSecure = process.env.NODE_ENV === 'production';
+
+app.use((req, res, next) => {
+    res.cookie('token', 'your-token-value', {
+        httpOnly: true,
+        sameSite: 'none',  // necessary for cross-domain cookies
+        secure: isSecure,  // only set cookies over https
+    });
+    next();
+});
 app.get('/images', async (req, res) => {
   try {
     const image = req.query.image;
