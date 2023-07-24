@@ -3,18 +3,20 @@ const jwt = require("jsonwebtoken");
 
 exports.isAuthenticated = async (req, res, next) => {
   try {
-     const {token} = req.body.token || req.query.token || req.headers || req.cookies;
-    
-    
-    console.log(req.cookies);
-    console.log(token);
+    let token = req.body.token || req.query.token || req.headers.authorization || req.cookies.token;
+
     if (!token) {
       return res.status(401).json({
         message: "Please login first",
       });
     }
 
-    const decoded = await jwt.verify(token, "coderun" );
+    if (token.startsWith("Bearer ")) {
+      // Remove "Bearer " prefix if present
+      token = token.slice(7);
+    }
+
+    const decoded = await jwt.verify(token, "coderun");
    
     req.user = await User.findById(decoded._id);
     console.log(req.user);
